@@ -1,23 +1,24 @@
 {
     "name": "Eventix/Translation",
-        "description": "The Eventix Translation package based on the Laravel one.",
-        "homepage": "https://eventix.io",
-        "authors": [
-            {
-                "name": "Mart Pluijmaekers",
-                "email": "mart@eventix.io"
-            }
-        ],
-        "require": {
-            "php": ">=5.5.9",
-            "illuminate/filesystem": "5.2.*",
-            "illuminate/support": "5.2.*",
-            "symfony/translation": "2.8.*|3.0.*"
-        },
-        "autoload": {
-            "psr-4": {
-                "Eventix\\Translation\\": ""
-            }
-        },
-        "minimum-stability": "dev"
+    "description": "The Eventix Translation package based on the Laravel one.",
+    "homepage": "https://eventix.io",
+    "authors": [
+        {
+            "name": "Mart Pluijmaekers",
+            "email": "mart@eventix.io"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "illuminate/filesystem": "5.2.*",
+        "illuminate/support": "5.2.*",
+        "symfony/translation": "2.8.*|3.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Eventix\\Translation\\": "src/",
+            "Eventix\\Translation\\Sources\\": "src/sources",
+        }
+    },
+    "minimum-stability": "dev"
 }
