@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Translation;
+namespace Eventix\Translation;
 
 use Illuminate\Filesystem\Filesystem;
 
