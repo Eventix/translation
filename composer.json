@@ -1,16 +1,11 @@
 {
-    "name": "illuminate/translation",
-    "description": "The Illuminate Translation package.",
-    "license": "MIT",
-    "homepage": "http://laravel.com",
-    "support": {
-        "issues": "https://github.com/laravel/framework/issues",
-        "source": "https://github.com/laravel/framework"
-    },
+    "name": "Eventix/Translation",
+    "description": "The Eventix Translation package based on the Laravel one.",
+    "homepage": "https://eventix.io",
     "authors": [
         {
-            "name": "Taylor Otwell",
-            "email": "taylorotwell@gmail.com"
+            "name": "Mart Pluijmaekers",
+            "email": "mart@eventix.io"
         }
     ],
     "require": {
@@ -21,12 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Illuminate\\Translation\\": ""
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "5.3-dev"
+            "Eventix\\Translation\\": ""
         }
     },
     "minimum-stability": "dev"
