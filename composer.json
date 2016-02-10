@@ -17,7 +17,7 @@
     "autoload": {
         "psr-4": {
             "Eventix\\Translation\\": "src/",
-            "Eventix\\Translation\\Sources\\": "src/sources",
+            "Eventix\\Translation\\Sources\\": "src/sources"
         }
     },
     "minimum-stability": "dev"
