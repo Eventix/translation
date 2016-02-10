@@ -1,33 +1,23 @@
 {
-    "name": "illuminate/translation",
-    "description": "The Illuminate Translation package.",
-    "license": "MIT",
-    "homepage": "http://laravel.com",
-    "support": {
-        "issues": "https://github.com/laravel/framework/issues",
-        "source": "https://github.com/laravel/framework"
-    },
-    "authors": [
-        {
-            "name": "Taylor Otwell",
-            "email": "taylorotwell@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.5.9",
-        "illuminate/filesystem": "5.2.*",
-        "illuminate/support": "5.2.*",
-        "symfony/translation": "2.8.*|3.0.*"
-    },
-    "autoload": {
-        "psr-4": {
-            "Illuminate\\Translation\\": ""
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "5.2-dev"
-        }
-    },
-    "minimum-stability": "dev"
+    "name": "Eventix/Translation",
+        "description": "The Eventix Translation package based on the Laravel one.",
+        "homepage": "https://eventix.io",
+        "authors": [
+            {
+                "name": "Mart Pluijmaekers",
+                "email": "mart@eventix.io"
+            }
+        ],
+        "require": {
+            "php": ">=5.6.4",
+            "illuminate/filesystem": "5.3.*",
+            "illuminate/support": "5.3.*",
+            "symfony/translation": "3.1.*"
+        },
+        "autoload": {
+            "psr-4": {
+                "Eventix\\Translation\\": ""
+            }
+        },
+        "minimum-stability": "dev"
 }
