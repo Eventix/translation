@@ -65,7 +65,7 @@ class FileLoader implements LoaderInterface
      * @param  string  $namespace
      * @return array
      */
-    protected function loadNamespaced($locale, $group, $namespace)
+    private function loadNamespaced($locale, $group, $namespace)
     {
         if (isset($this->hints[$namespace])) {
             $lines = $this->loadPath($this->hints[$namespace], $locale, $group);
@@ -85,7 +85,7 @@ class FileLoader implements LoaderInterface
      * @param  string  $namespace
      * @return array
      */
-    protected function loadNamespaceOverrides(array $lines, $locale, $group, $namespace)
+    private function loadNamespaceOverrides(array $lines, $locale, $group, $namespace)
     {
         $file = "{$this->path}/vendor/{$namespace}/{$locale}/{$group}.php";
 
@@ -104,7 +104,7 @@ class FileLoader implements LoaderInterface
      * @param  string  $group
      * @return array
      */
-    protected function loadPath($path, $locale, $group)
+    private function loadPath($path, $locale, $group)
     {
         if ($this->files->exists($full = "{$path}/{$locale}/{$group}.php")) {
             return $this->files->getRequire($full);

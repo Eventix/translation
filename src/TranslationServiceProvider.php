@@ -44,7 +44,7 @@ class TranslationServiceProvider extends ServiceProvider
      */
     protected function registerLoader() {
         $this->app->singleton('translation.loader', function ($app) {
-            return new FileLoader($app['files'], $app['path.lang']);
+            return new AllLoader($app['files'], $app['path.lang']);
         });
     }
 
@@ -61,8 +61,8 @@ class TranslationServiceProvider extends ServiceProvider
         if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
 
             $this->publishes([
-                __DIR__ . '/translation.php'        => config_path('translation.php'),
-                __DIR__ . '../database/migrations/' => database_path('migrations')
+                __DIR__ . '/translation.php' => config_path('translation.php'),
+                __DIR__ . '/../database/'    => database_path("migrations")
             ]);
         }
     }
