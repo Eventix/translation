@@ -3,6 +3,7 @@
 namespace Eventix\Translation;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Application;
 
 class TranslationServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,8 @@ class TranslationServiceProvider extends ServiceProvider
 
             return $trans;
         });
+
+        $this->mergeConfigFrom(__DIR__.'/translation.php', 'translation');
     }
 
     /**
@@ -58,12 +61,10 @@ class TranslationServiceProvider extends ServiceProvider
     }
 
     public function boot() {
-        if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
+        if (!$this->app instanceof Application || !$this->app->runningInConsole())
+            return;
 
-            $this->publishes([
-                __DIR__ . '/translation.php' => config_path('translation.php'),
-                __DIR__ . '/../database/'    => database_path("migrations")
-            ]);
-        }
+        $this->publishes([__DIR__ . '/translation.php' => config_path('translation.php')]);
+        $this->publishes([__DIR__ . '/../database/'    => database_path("migrations")], 'migration');
     }
 }

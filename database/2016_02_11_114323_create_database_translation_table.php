@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class EventixDatabaseMigration extends Migration
+class EventixTranslationDatabaseMigration extends Migration
 {
     /**
      * Run the migrations.

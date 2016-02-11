@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Schema\Blueprint;
+
 return [
 
     /*
@@ -32,18 +34,21 @@ return [
      */
     'database' => [
         'structure' => [
-            'user_translations' => function(Blueprint $table){
+            'translation' => function(Blueprint $table){
                 $table->guid();
                 $table->guid('user_id');
                 $table->string('namespace');
-                $table->
+                $table->string('name');
+                $table->string('value');
+
+                $table->foreign('user_id')->references('guid')-on('users')->onDelete('cascade');
             }
         ],
 
         'lines' => function ($db){
             return $db->select('*')
                 ->from('user_translations');
-        }
+        },
     ]
 
 
