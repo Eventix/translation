@@ -1,8 +1,9 @@
 <?php
 
-namespace Eventix\Translation;
+namespace Eventix\Translation\Sources;
 
 use Illuminate\Filesystem\Filesystem;
+use Eventix\Translation\LoaderInterface;
 
 class FileLoader implements LoaderInterface
 {
@@ -32,7 +33,6 @@ class FileLoader implements LoaderInterface
      *
      * @param  \Illuminate\Filesystem\Filesystem  $files
      * @param  string  $path
-     * @return void
      */
     public function __construct(Filesystem $files, $path)
     {
@@ -65,7 +65,7 @@ class FileLoader implements LoaderInterface
      * @param  string  $namespace
      * @return array
      */
-    private function loadNamespaced($locale, $group, $namespace)
+    public function loadNamespaced($locale, $group, $namespace)
     {
         if (isset($this->hints[$namespace])) {
             $lines = $this->loadPath($this->hints[$namespace], $locale, $group);

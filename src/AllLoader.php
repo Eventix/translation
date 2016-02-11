@@ -4,131 +4,72 @@ namespace Eventix\Translation;
 
 use Illuminate\Filesystem\Filesystem;
 
-class FileLoader implements LoaderInterface
+class AllLoader implements LoaderInterface
 {
     /**
-     * The filesystem instance.
      *
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var array|String
      */
-    protected $files;
+    protected $classSources = [];
 
     /**
-     * The default path for the loader.
+     * All instances of Interface implementations loading
      *
-     * @var string
+     * @var array|LoaderInterface
      */
-    protected $path;
-
-    /**
-     * All of the namespace hints.
-     *
-     * @var array
-     */
-    protected $hints = [];
-
-    /**
-     *
-     */
+    protected $sources = [];
 
     /**
      * Create a new file loader instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @param  string  $path
-     * @return void
+     * @param  \Illuminate\Filesystem\Filesystem $files
+     * @param  string $path
      */
-    public function __construct(Filesystem $files, $path)
-    {
+    public function __construct(Filesystem $files, $path) {
+        $this->classSources = config('translation.sources') ?? [];
 
-//        var_dump(config('translation.sources'));
-
-        $this->path = $path;
-        $this->files = $files;
+        foreach ($this->classSources as $class)
+            if (in_array('Eventix\Translation\LoaderInterface', class_implements($class)))
+                $this->sources[] = new $class($files, $path);
     }
 
     /**
      * Load the messages for the given locale.
      *
-     * @param  string  $locale
-     * @param  string  $group
-     * @param  string  $namespace
+     * @param  string $locale
+     * @param  string $group
+     * @param  string $namespace
      * @return array
      */
-    public function load($locale, $group, $namespace = null)
-    {
-        if (is_null($namespace) || $namespace == '*') {
-            return $this->loadPath($this->path, $locale, $group);
-        }
+    public function load($locale, $group, $namespace = null) {
 
-        return $this->loadNamespaced($locale, $group, $namespace);
+        return array_reduce($this->sources, function ($carry, $item) use ($locale, $group, $namespace) {
+            return array_merge($carry, $item->load($locale, $group, $namespace));
+        }, []);
     }
 
     /**
      * Load a namespaced translation group.
      *
-     * @param  string  $locale
-     * @param  string  $group
-     * @param  string  $namespace
+     * @param  string $locale
+     * @param  string $group
+     * @param  string $namespace
      * @return array
      */
-    protected function loadNamespaced($locale, $group, $namespace)
-    {
-        if (isset($this->hints[$namespace])) {
-            $lines = $this->loadPath($this->hints[$namespace], $locale, $group);
-
-            return $this->loadNamespaceOverrides($lines, $locale, $group, $namespace);
-        }
-
-        return [];
-    }
-
-    /**
-     * Load a local namespaced translation group for overrides.
-     *
-     * @param  array  $lines
-     * @param  string  $locale
-     * @param  string  $group
-     * @param  string  $namespace
-     * @return array
-     */
-    protected function loadNamespaceOverrides(array $lines, $locale, $group, $namespace)
-    {
-        $file = "{$this->path}/vendor/{$namespace}/{$locale}/{$group}.php";
-
-        if ($this->files->exists($file)) {
-            return array_replace_recursive($lines, $this->files->getRequire($file));
-        }
-
-        return $lines;
-    }
-
-    /**
-     * Load a locale from a given path.
-     *
-     * @param  string  $path
-     * @param  string  $locale
-     * @param  string  $group
-     * @return array
-     */
-    protected function loadPath($path, $locale, $group)
-    {
-        if ($this->files->exists($full = "{$path}/{$locale}/{$group}.php")) {
-            return $this->files->getRequire($full);
-        }
-
+    public function loadNamespaced($locale, $group, $namespace) {
+        // Empty implementation
         return [];
     }
 
     /**
      * Add a new namespace to the loader.
      *
-     * @param  string  $namespace
-     * @param  string  $hint
+     * @param  string $namespace
+     * @param  string $hint
      * @return void
      */
-    public function addNamespace($namespace, $hint)
-    {
-        $this->hints[$namespace] = $hint;
+    public function addNamespace($namespace, $hint) {
+        foreach ($this->sources as $source)
+            $source->addNamespace($namespace, $hint);
     }
 }

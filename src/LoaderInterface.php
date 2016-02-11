@@ -22,4 +22,14 @@ interface LoaderInterface
      * @return void
      */
     public function addNamespace($namespace, $hint);
+
+    /**
+     * Load a namespaced translation group.
+     *
+     * @param  string $locale
+     * @param  string $group
+     * @param  string $namespace
+     * @return array
+     */
+    public function loadNamespaced($locale, $group, $namespace);
 }
