@@ -49,19 +49,6 @@ class AllLoader implements LoaderInterface
     }
 
     /**
-     * Load a namespaced translation group.
-     *
-     * @param  string $locale
-     * @param  string $group
-     * @param  string $namespace
-     * @return array
-     */
-    public function loadNamespaced($locale, $group, $namespace) {
-        // Empty implementation
-        return [];
-    }
-
-    /**
      * Add a new namespace to the loader.
      *
      * @param  string $namespace

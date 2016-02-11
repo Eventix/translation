@@ -13,6 +13,12 @@ class DatabaseLoader implements LoaderInterface
      */
     protected $hints = [];
 
+    protected $shouldNotTrigger = true;
+
+    public function __construct(){
+        $this->shouldNotTrigger = !in_array('http_authorization', array_map('strtolower', array_keys($_SERVER)));
+    }
+
     /**
      * Load the messages for the given locale.
      *
@@ -22,7 +28,12 @@ class DatabaseLoader implements LoaderInterface
      * @return array
      */
     public function load($locale, $group, $namespace = null) {
-        return ["failed" => "blub"];
+        $cb = config('translation.database.lines');
+
+        if(gettype($cb) === 'object' && $this->shouldNotTrigger === false)
+            return $cb($locale, $group, $namespace);
+
+        return [];
     }
 
     /**
@@ -34,17 +45,5 @@ class DatabaseLoader implements LoaderInterface
      */
     public function addNamespace($namespace, $hint) {
         $this->hints[$namespace] = $hint;
-    }
-
-    /**
-     * Load a namespaced translation group.
-     *
-     * @param  string $locale
-     * @param  string $group
-     * @param  string $namespace
-     * @return array
-     */
-    public function loadNamespaced($locale, $group, $namespace) {
-        return [];
     }
 }

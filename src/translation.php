@@ -36,21 +36,25 @@ return [
         'structure' => [
             'translation' => function(Blueprint $table){
                 $table->guid();
-                $table->guid('user_id');
-                $table->string('namespace');
+                $table->guid('company_id');
+                $table->string('namespace')->nullable();
+                $table->string('locale');
+                $table->string('group');
                 $table->string('name');
                 $table->string('value');
 
-                $table->foreign('user_id')->references('guid')->on('users')->onDelete('cascade');
+                $table->foreign('company_id')->references('guid')->on('company')->onDelete('cascade');
             }
         ],
 
-        'lines' => function ($db){
-            return $db->select('*')
-                ->from('user_translations');
+        'lines' => function ($locale, $group, $namespace = null){
+            return \DB::table('translation')
+                ->where('locale', $locale)
+                ->where('company_id', \OAuthUser::get()->company_id)
+                ->where('group', $group)
+                ->where('namespace', $namespace == '*' ? null : $namespace)
+                ->pluck('value', 'name');
         },
     ]
-
-
 
 ];
