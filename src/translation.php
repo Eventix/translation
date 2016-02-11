@@ -41,7 +41,7 @@ return [
                 $table->string('name');
                 $table->string('value');
 
-                $table->foreign('user_id')->references('guid')-on('users')->onDelete('cascade');
+                $table->foreign('user_id')->references('guid')->on('users')->onDelete('cascade');
             }
         ],
 
