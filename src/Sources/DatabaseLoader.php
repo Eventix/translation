@@ -13,25 +13,20 @@ class DatabaseLoader implements LoaderInterface
      */
     protected $hints = [];
 
-    protected $shouldNotTrigger = true;
-
-    public function __construct(){
-        $this->shouldNotTrigger = !in_array('http_authorization', array_map('strtolower', array_keys($_SERVER)));
-    }
-
     /**
      * Load the messages for the given locale.
      *
      * @param  string $locale
      * @param  string $group
      * @param  string $namespace
+     * @param  string $differential
      * @return array
      */
-    public function load($locale, $group, $namespace = null) {
+    public function load($locale, $group, $namespace = null, $differential = false) {
         $cb = config('translation.database.lines');
 
-        if(gettype($cb) === 'object' && $this->shouldNotTrigger === false)
-            return $cb($locale, $group, $namespace);
+        if(gettype($cb) === 'object')
+            return $cb($locale, $group, $namespace, $differential);
 
         return [];
     }

@@ -41,10 +41,9 @@ class AllLoader implements LoaderInterface
      * @param  string $namespace
      * @return array
      */
-    public function load($locale, $group, $namespace = null) {
-
-        return array_reduce($this->sources, function ($carry, $item) use ($locale, $group, $namespace) {
-            return array_merge($carry, $item->load($locale, $group, $namespace));
+    public function load($locale, $group, $namespace = null, $differential = false) {
+        return array_reduce($this->sources, function ($carry, $item) use ($locale, $group, $namespace, $differential) {
+            return array_merge($carry, $item->load($locale, $group, $namespace, $differential));
         }, []);
     }
 

@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'sources' => [
+    'sources'  => [
         Eventix\Translation\Sources\FileLoader::class,
         Eventix\Translation\Sources\DatabaseLoader::class,
     ],
@@ -34,8 +34,7 @@ return [
      */
     'database' => [
         'structure' => [
-            'translation' => function(Blueprint $table){
-                $table->guid();
+            'translation' => function (Blueprint $table) {
                 $table->guid('company_id');
                 $table->string('namespace')->nullable();
                 $table->string('locale');
@@ -43,17 +42,20 @@ return [
                 $table->string('name');
                 $table->string('value');
 
-                $table->foreign('company_id')->references('guid')->on('company')->onDelete('cascade');
+                $table->foreign('company_id')->references('guid')->on('companies')->onDelete('cascade');
+                $table->unique('company_id', 'locale', 'group', 'name');
             }
         ],
 
-        'lines' => function ($locale, $group, $namespace = null){
-            return \DB::table('translation')
+        'lines' => function ($locale, $group, $namespace = null, $differential = false) {
+            $r = \DB::table('translation')
                 ->where('locale', $locale)
-                ->where('company_id', \OAuthUser::get()->company_id)
                 ->where('group', $group)
-                ->where('namespace', $namespace == '*' ? null : $namespace)
-                ->pluck('value', 'name');
+                ->where('namespace', $namespace == '*' ? null : $namespace);
+
+            $r = ($differential === false ? $r->whereNull('company_id') : $r->where('company_id', $differential));
+
+            return $r->pluck('value', 'name');
         },
     ]
 

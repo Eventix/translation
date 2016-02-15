@@ -10,9 +10,10 @@ interface LoaderInterface
      * @param  string  $locale
      * @param  string  $group
      * @param  string  $namespace
+     * @param  mixed   $differential
      * @return array
      */
-    public function load($locale, $group, $namespace = null);
+    public function load($locale, $group, $namespace = null, $differential = false);
 
     /**
      * Add a new namespace to the loader.

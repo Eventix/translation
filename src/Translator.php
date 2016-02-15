@@ -47,6 +47,13 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface
     protected $selector;
 
     /**
+     * The differential for this Translator instance
+     *
+     * @var null
+     */
+    protected $differential = null;
+
+    /**
      * Create a new translator instance.
      *
      * @param  \Illuminate\Translation\LoaderInterface  $loader
@@ -136,7 +143,7 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface
      */
     protected function getLine($namespace, $group, $locale, $item, array $replace)
     {
-        $line = Arr::get($this->loaded[$namespace][$group][$locale], $item);
+        $line = Arr::get($this->loaded[$namespace][$group][$locale][$this->differential], $item);
 
         if (is_string($line)) {
             return $this->makeReplacements($line, $replace);
@@ -235,18 +242,19 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface
      * @param  string  $locale
      * @return void
      */
-    public function load($namespace, $group, $locale)
+    public function load($namespace, $group, $locale, $differential = null)
     {
-        if ($this->isLoaded($namespace, $group, $locale)) {
+        $diff = $differential ?? $this->differential;
+        if ($this->isLoaded($namespace, $group, $locale, $diff)) {
             return;
         }
 
         // The loader is responsible for returning the array of language lines for the
         // given namespace, group, and locale. We'll set the lines in this array of
         // lines that have already been loaded so that we can easily access them.
-        $lines = $this->loader->load($locale, $group, $namespace);
+        $lines = $this->loader->load($locale, $group, $namespace, $diff);
 
-        $this->loaded[$namespace][$group][$locale] = $lines;
+        $this->loaded[$namespace][$group][$locale][$diff] = $lines;
     }
 
     /**
@@ -257,9 +265,9 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface
      * @param  string  $locale
      * @return bool
      */
-    protected function isLoaded($namespace, $group, $locale)
+    protected function isLoaded($namespace, $group, $locale, $diff)
     {
-        return isset($this->loaded[$namespace][$group][$locale]);
+        return isset($this->loaded[$namespace][$group][$locale][$diff]);
     }
 
     /**
@@ -391,5 +399,19 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface
     public function setFallback($fallback)
     {
         $this->fallback = $fallback;
+    }
+
+    /**
+     * Set the a
+     *
+     * @param $differential
+     */
+    public function setDifferential($differential){
+        $this->differential = $differential;
+    }
+
+    public function getLines($locale, $group, $namespace = null, $differential = false){
+        $this->load($namespace, $group, $locale, $differential);
+        return $this->loaded[$namespace][$group][$locale][$differential];
     }
 }
