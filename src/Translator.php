@@ -402,14 +402,24 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface
     }
 
     /**
-     * Set the a
+     * Set the differential thing, can be anything since it is directly passed to the callback defined in the
+     * configuration file.
      *
-     * @param $differential
+     * @param $differential The parameter to be passed.
      */
     public function setDifferential($differential){
         $this->differential = $differential;
     }
 
+    /**
+     * Get all lines loaded in this translator
+     *
+     * @param $locale The locale to load the translation of
+     * @param $group The translation group
+     * @param null $namespace The namespace to load
+     * @param bool $differential The differential to load
+     * @return mixed All translated lines
+     */
     public function getLines($locale, $group, $namespace = null, $differential = false){
         $this->load($namespace, $group, $locale, $differential);
         return $this->loaded[$namespace][$group][$locale][$differential];
