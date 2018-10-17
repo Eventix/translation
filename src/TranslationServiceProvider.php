@@ -3,10 +3,8 @@
 namespace Eventix\Translation;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Foundation\Application;
 
-class TranslationServiceProvider extends ServiceProvider
-{
+class TranslationServiceProvider extends ServiceProvider {
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -20,7 +18,9 @@ class TranslationServiceProvider extends ServiceProvider
      * @return void
      */
     public function register() {
-        $this->registerLoader();
+        $this->app->singleton('translation.loader', function ($app) {
+            return new AllLoader($app['files'], $app['path.lang']);
+        });
 
         $this->app->singleton('translator', function ($app) {
             $loader = $app['translation.loader'];
@@ -36,19 +36,6 @@ class TranslationServiceProvider extends ServiceProvider
 
             return $trans;
         });
-
-        $this->mergeConfigFrom(__DIR__.'/translation.php', 'translation');
-    }
-
-    /**
-     * Register the translation line loader.
-     *
-     * @return void
-     */
-    protected function registerLoader() {
-        $this->app->singleton('translation.loader', function ($app) {
-            return new AllLoader($app['files'], $app['path.lang']);
-        });
     }
 
     /**
@@ -58,13 +45,5 @@ class TranslationServiceProvider extends ServiceProvider
      */
     public function provides() {
         return ['translator', 'translation.loader'];
-    }
-
-    public function boot() {
-        if (!$this->app instanceof Application || !$this->app->runningInConsole())
-            return;
-
-        $this->publishes([__DIR__ . '/translation.php' => config_path('translation.php')]);
-        $this->publishes([__DIR__ . '/../database/'    => database_path("migrations")], 'migration');
     }
 }

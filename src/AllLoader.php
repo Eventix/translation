@@ -2,15 +2,18 @@
 
 namespace Eventix\Translation;
 
-use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\Translation\Loader;
+use Illuminate\Translation\FileLoader;
 
-class AllLoader implements LoaderInterface
-{
+class AllLoader implements Loader {
     /**
      *
      * @var array|String
      */
-    protected $classSources = [];
+    protected $classSources = [
+        FileLoader::class,
+        DatabaseLoader::class,
+    ];
 
     /**
      * All instances of Interface implementations loading
@@ -22,14 +25,12 @@ class AllLoader implements LoaderInterface
     /**
      * Create a new file loader instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem $files
+     * @param  $files
      * @param  string $path
      */
-    public function __construct(Filesystem $files, $path) {
-        $this->classSources = config('translation.sources') ?? [];
-
+    public function __construct($files, $path) {
         foreach ($this->classSources as $class)
-            if (in_array('Eventix\Translation\LoaderInterface', class_implements($class)))
+            if (in_array(Loader::class, class_implements($class)))
                 $this->sources[] = new $class($files, $path);
     }
 
@@ -57,5 +58,18 @@ class AllLoader implements LoaderInterface
     public function addNamespace($namespace, $hint) {
         foreach ($this->sources as $source)
             $source->addNamespace($namespace, $hint);
+    }
+
+    public function addJsonPath($path) {
+        foreach ($this->sources as $source)
+            $source->addJsonPath($path);
+    }
+
+    public function namespaces() {
+        $parts = [];
+        foreach ($this->sources as $source)
+            $parts[] = $source->namespaces();
+
+        return call_user_func_array('array_merge_recursive', $parts);
     }
 }

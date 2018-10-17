@@ -17,8 +17,17 @@
     "autoload": {
         "psr-4": {
             "Eventix\\Translation\\": "src/",
-            "Eventix\\Translation\\Sources\\": "src/sources"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Eventix\\Translation\\TranslationServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
     },
     "minimum-stability": "dev"
 }
